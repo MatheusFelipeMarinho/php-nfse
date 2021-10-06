@@ -282,3 +282,4 @@ Caso você encontre algum problema relativo a segurança, por favor envie um ema
 ## Credits
 
 - Lucas Simões <lucas_development@outlook.com>
+- Tiago Franco <https://github.com/tiagofranco86/php-nfse>
