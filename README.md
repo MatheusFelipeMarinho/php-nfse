@@ -272,7 +272,7 @@ Via Composer
 *Biblioteca em desenvolvimento*
 
 ``` bash
-$ composer require lucas-simoes/php-nfse:dev-master
+$ composer require matheus-felipe/php-nfse
 ```
 
 ## Security
