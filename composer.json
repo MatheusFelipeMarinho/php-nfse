@@ -1,5 +1,5 @@
 {
-    "name": "lucas-simoes/php-nfse",
+    "name": "matheus-felipe/php-nfse",
     "type": "library",
     "description": "API para geração e comunicação da NFSe com as Prefeituras. Este é um fork do projeto nfephp-org/sped-nfse que foi descontinuado",
     "keywords": ["nfse", "sped", "nfephp"],
@@ -19,6 +19,11 @@
         {
             "name": "Lucas Simões",
             "email": "lucas_development@outlook.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Matheus Felipe",
+            "email": "matheus_fellip@hotmail.com",
             "role": "Developer"
         }
     ],
