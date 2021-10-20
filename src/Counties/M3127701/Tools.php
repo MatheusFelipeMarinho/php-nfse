@@ -82,7 +82,7 @@ class Tools extends ToolsSIGISS
      */
     public function gerarNota($rps)
     {
-        $class = "NFePHP\\NFSe\\Counties\\M3112701\\v{$this->versao}\\GerarNota";
+        $class = "NFePHP\\NFSe\\Counties\\M3127701\\v{$this->versao}\\GerarNota";
         $fact = new $class($this->certificate);
 
         return $this->gerarNotaCommon($fact, $rps);
