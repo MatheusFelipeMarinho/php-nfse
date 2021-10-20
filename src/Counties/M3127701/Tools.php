@@ -116,7 +116,7 @@ class Tools extends ToolsSIGISS
      */
     public function consultarRps($rps)
     {
-        $class = "NFePHP\\NFSe\\Counties\\M3112701\\v{$this->versao}\\ConsultarRps";
+        $class = "NFePHP\\NFSe\\Counties\\M3127701\\v{$this->versao}\\ConsultarRps";
         $fact = new $class($this->certificate);
         return $this->consultarRpsCommon($fact, $rps);
     }
@@ -141,7 +141,7 @@ class Tools extends ToolsSIGISS
      */
     public function consultarNfse($rps)
     {
-        $class = "NFePHP\\NFSe\\Counties\\M3112701\\v{$this->versao}\\ConsultarNfse";
+        $class = "NFePHP\\NFSe\\Counties\\M3127701\\v{$this->versao}\\ConsultarNfse";
         $fact = new $class($this->certificate);
         return $this->consultarNfseCommon($fact, $rps);
     }
@@ -168,7 +168,7 @@ class Tools extends ToolsSIGISS
      */
     public function ConsultarCadastro($rps, $cpfCnpjContribuinte)
     {
-        $class = "NFePHP\\NFSe\\Counties\\M3112701\\v{$this->versao}\\ConsultarCadastro";
+        $class = "NFePHP\\NFSe\\Counties\\M3127701\\v{$this->versao}\\ConsultarCadastro";
         $fact = new $class($this->certificate);
         return $this->ConsultarCadastroCommon($fact, $rps, $cpfCnpjContribuinte);
     }
@@ -249,7 +249,7 @@ class Tools extends ToolsSIGISS
      */
     public function makeXml($rps)
     {
-        $class = "NFePHP\\NFSe\\Counties\\M3112701\\v{$this->versao}\\GerarNota";
+        $class = "NFePHP\\NFSe\\Counties\\M3127701\\v{$this->versao}\\GerarNota";
         $fact = new $class($this->certificate);
 
         $message = $fact->render(
@@ -277,7 +277,7 @@ class Tools extends ToolsSIGISS
 
     public function cancelarNfse($rps, $codCancelamento, $email = '')
     {
-        $class = "NFePHP\\NFSe\\Counties\\M3112701\\v{$this->versao}\\CancelarNota";
+        $class = "NFePHP\\NFSe\\Counties\\M3127701\\v{$this->versao}\\CancelarNota";
         $fact = new $class($this->certificate);
 
         return $this->cancelarNotaCommon($fact, $rps, $codCancelamento, $email);
