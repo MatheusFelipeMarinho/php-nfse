@@ -17,6 +17,8 @@ namespace NFePHP\NFSe\Counties\M3127701;
  * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
  */
 
+use Exception;
+use SoapClient;
 use NFePHP\NFSe\Models\SIGISS\SoapCurl;
 use NFePHP\NFSe\Models\SIGISS\Tools as ToolsSIGISS;
 
@@ -68,9 +70,13 @@ class Tools extends ToolsSIGISS
     protected $namespaces = [
         'xmlns:SOAP-ENV' => "http://schemas.xmlsoap.org/soap/envelope/",
         'xmlns:xsd' => "http://www.w3.org/2001/XMLSchema",
-        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchemainstance", 
-        'xmlns:SOAP-ENC' => 'http://schemas.xmlsoap.org/soap/encoding/', 
-        'xmlns:tns' => 'https://valadares.sigiss.com.br/valadares/ws/sigiss_ws.php?wsdl'
+        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
+        'xmlns:SOAP-ENC' => "http://schemas.xmlsoap.org/soap/encoding/",
+        'xmlns:tns' => "urn:sigiss_ws",
+        'xmlns:soap' => "http://schemas.xmlsoap.org/wsdl/soap/",
+        'xmlns:wsdl' => "http://schemas.xmlsoap.org/wsdl/",
+        'xmlns' => "http://schemas.xmlsoap.org/wsdl/",
+        'targetNamespace' => "urn:sigiss_ws",
     ];
 
     protected $params = [];
@@ -84,7 +90,6 @@ class Tools extends ToolsSIGISS
     {
         $class = "NFePHP\\NFSe\\Counties\\M3127701\\v{$this->versao}\\GerarNota";
         $fact = new $class($this->certificate);
-
         return $this->gerarNotaCommon($fact, $rps);
     }
 
@@ -159,7 +164,7 @@ class Tools extends ToolsSIGISS
         return $this->sendRequest($url, $message);
     }
 
-    
+
     /**
      * Consulta Cadastro
      * @param string $rps
@@ -195,51 +200,14 @@ class Tools extends ToolsSIGISS
      */
     protected function sendRequest($url, $message)
     {
-        $this->xmlRequest = $message;
-        
-        if (!$url) {
-            $url = $this->url[$this->config->tpAmb];
-        }
+        $url = 'https://valadares.sigiss.com.br:443/valadares/ws/sigiss_ws.php?wsdl';
 
-        if (!is_object($this->soap)) {
-            $this->soap = new SoapCurl($this->certificate);
-        }
+        $this->client = new SoapClient($url);
 
-        //formata o xml da mensagem para o padão esperado pelo webservice
-        $dom = new \DOMDocument('1.0', 'UTF-8');
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = false;
-        $dom->loadXML($message);
+        $result = $this->client->__soapCall('GerarNota', ['DescricaoRps' => $message]);
 
-        $message = str_replace('<?xml version="1.0"?>', '', $dom->saveXML());
+        return $result;
 
-        //O atributo xmlns precisa ser removido da tag <EnviarLoteRpsEnvio> pois
-        //o web service de Itabira não o reconhece
-        $messageText = str_replace('xmlns="http://www.SIGISS.org.br/nfse.xsd"', '', $message);
-
-        if ($this->withcdata) {
-            $messageText = $this->stringTransform($message);
-        }
-
-        $request = '<tns:' . $this->method . ' xmlns:tns="https://valadares.sigiss.com.br/valadares/ws/sigiss_ws.php?wsdl">' . trim($messageText) . '</tns:' . $this->method . '>';
-
-        $this->params = array(
-            "soapaction: '$url#" . $this->method . "'",
-            'Host: https://valadares.sigiss.com.br/testevaladares/ws/sigiss_ws.php?wsdl',
-            'Content-Type: text/xml; charset=ISO-8859-1'
-        );
-
-        $action = '';
-        //Realiza o request SOAP
-        return $this->soap->send(
-            $url,
-            $this->method,
-            $action,
-            $this->soapversion,
-            $this->params,
-            $this->namespaces,
-            $request
-        );
     }
 
     /**
@@ -294,14 +262,14 @@ class Tools extends ToolsSIGISS
     protected function cancelarNotaCommon($fact, $rps, $codCancelamento, $email = '', $url = '')
     {
         $this->method = 'CancelarNota';
-        
+
         $message = $fact->render(
             $this->versao,
-            $rps, 
+            $rps,
             $codCancelamento,
             $email
         );
-        
+
 
         // @header ("Content-Disposition: attachment; filename=\"NFSe_Lote.xml\"" );
         // echo $message;
