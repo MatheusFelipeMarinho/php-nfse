@@ -29,8 +29,8 @@ class Tools extends ToolsSIGISS
      * @var array
      */
     protected $url = [
-        1 => 'https://valadares.sigiss.com.br:443/valadares/ws/sigiss_ws.php?wsdl',
-        2 => 'https://valadares.sigiss.com.br/testevaladares/ws/sigiss_ws.php?wsdl'
+        1 => 'https://valadares.sigiss.com.br/valadares/ws/sigiss_ws.php?wsdl',
+        2 => 'https://testevaladares.sigiss.com.br/testevaladares/ws/sigiss_ws.php?wsdl'
     ];
     /**
      * County Namespace
@@ -68,15 +68,12 @@ class Tools extends ToolsSIGISS
      * @var array
      */
     protected $namespaces = [
-        'xmlns:SOAP-ENV' => "http://schemas.xmlsoap.org/soap/envelope/",
-        'xmlns:xsd' => "http://www.w3.org/2001/XMLSchema",
-        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
-        'xmlns:SOAP-ENC' => "http://schemas.xmlsoap.org/soap/encoding/",
-        'xmlns:tns' => "urn:sigiss_ws",
-        'xmlns:soap' => "http://schemas.xmlsoap.org/wsdl/soap/",
-        'xmlns:wsdl' => "http://schemas.xmlsoap.org/wsdl/",
-        'xmlns' => "http://schemas.xmlsoap.org/wsdl/",
-        'targetNamespace' => "urn:sigiss_ws",
+        "SOAP-ENV:encodingStyle" => "http://schemas.xmlsoap.org/soap/encoding/",
+        "xmlns:SOAP-ENV" => "http://schemas.xmlsoap.org/soap/envelope/",
+        "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema",
+        "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
+        "xmlns:SOAP-ENC" => "http://schemas.xmlsoap.org/soap/encoding/",
+        "xmlns:tns" => "urn:sigiss_ws"
     ];
 
     protected $params = [];
@@ -200,13 +197,55 @@ class Tools extends ToolsSIGISS
      */
     protected function sendRequest($url, $message)
     {
-        $url = 'https://valadares.sigiss.com.br:443/valadares/ws/sigiss_ws.php?wsdl';
+        $this->xmlRequest = $message;
 
-        $this->client = new SoapClient($url);
+        if (!$url) {
+            $url = $this->url[$this->config->tpAmb];
+        }
 
-        $result = $this->client->__soapCall('GerarNota', ['DescricaoRps' => $message]);
+        if (!is_object($this->soap)) {
+            $this->soap = new SoapCurl($this->certificate);
+        }
 
-        return $result;
+        //formata o xml da mensagem para o padão esperado pelo webservice
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = false;
+        $dom->loadXML($message);
+
+        $message = str_replace('<?xml version="1.0"?>', '', $dom->saveXML());
+
+        //O atributo xmlns precisa ser removido da tag <EnviarLoteRpsEnvio> pois
+        //o web service de Itabira não o reconhece
+        $messageText = str_replace('xmlns="http://www.SIGISS.org.br/nfse.xsd"', '', $message);
+
+        if ($this->withcdata) {
+            $messageText = $this->stringTransform($message);
+        }
+
+        $request = '<tns:' . $this->method . ' xmlns:tns="https://valadares.sigiss.com.br:443/valadares/ws/sigiss_ws.php?wsdl">' . trim($messageText) . '</tns:' . $this->method . '>';
+
+
+        $this->params = array(
+            "Content-type: text/xml;charset=\"utf-8\"",
+            "Accept: text/xml",
+            "Cache-Control: no-cache",
+            "Pragma: no-cache",
+            "SOAPAction: ;",
+           // "Content-length: " . strlen($xml),
+        );
+
+        $action = '';
+        //Realiza o request SOAP
+        return $this->soap->send(
+            $url,
+            $this->method,
+            $action,
+            $this->soapversion,
+            $this->params,
+            $this->namespaces,
+            $request
+        );
 
     }
 

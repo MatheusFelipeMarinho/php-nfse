@@ -26,13 +26,13 @@ class Rps extends RpsSIGISS
     const TIPO_RPS   = 1;
     const TIPO_MISTO = 2;
     const TIPO_CUPOM = 3;
-    
+
     const TOMADORPFNI = 1;
     const TOMADORPF= 2;
     const TOMADORPJMUNICIPIO = 3;
     const TOMADORPJFORA = 4;
     const TOMADORPJFORADOPAIS = 5;
-    
+
     const CPF  = 1;
     const CNPJ = 2;
 
@@ -53,7 +53,7 @@ class Rps extends RpsSIGISS
     /**
      * @var array
      */
-    public $infPrestador = ['ccm' => '', 'cnpjcpf' => '', 'cpf_usuario' => '', 'senha_usuario' => ''];
+    public $infPrestador = ['ccm' => '', 'cnpjcpf' => '', 'cpf_usuario' => '', 'senha' => ''];
     /**
      * @var array
      */
@@ -183,15 +183,15 @@ class Rps extends RpsSIGISS
      * @param string $ccm
      * @param string $cnpjcpf
      * @param string $cpf_usuario
-     * @param string $senha_usuario
+     * @param string $senha
      */
-    public function prestador($ccm, $cnpjcpf, $cpf_usuario, $senha_usuario)
+    public function prestador($ccm, $cnpjcpf, $cpf_usuario, $senha)
     {
         $this->infPrestador = [
             "ccm" => $ccm,
             "cnpjcpf" => $cnpjcpf,
             "cpf_usuario" => $cpf_usuario,
-            "senha_usuario" => $senha_usuario,
+            "senha" => $senha,
         ];
     }
 
@@ -263,7 +263,7 @@ class Rps extends RpsSIGISS
     }
 
     /**
-     * Set servico conforme Lista (código DMS). 
+     * Set servico conforme Lista (código DMS).
      * @param string $value
      * @param string $campo - String com o nome do campo caso queira mostrar na mensagem de validação
      * @throws InvalidArgumentException
@@ -568,7 +568,7 @@ class Rps extends RpsSIGISS
         }
         $this->infRetencaoIss = round($value, 2);
     }
-    
+
     /**
      * Set ISS tax aliquot in percent
      * @param float $value
@@ -640,7 +640,7 @@ class Rps extends RpsSIGISS
      * @param string $obra_local_quadra
      * @param string $obra_local_bairro
      */
-    public function construcaoCivil($codigoObra, $art, $obra_alvara_numero = '', 
+    public function construcaoCivil($codigoObra, $art, $obra_alvara_numero = '',
     $obra_alvara_ano = '', $obra_local_lote = '', $obra_local_quadra = '', $obra_local_bairro = '')
     {
         $this->infConstrucaoCivil = [

@@ -3,6 +3,7 @@
 namespace NFePHP\NFSe\Models\SIGISS;
 
 use NFePHP\Common\Soap\SoapBase;
+use Illuminate\Support\Facades\Log;
 use NFePHP\Common\Exception\SoapException;
 
 /**
@@ -10,13 +11,13 @@ use NFePHP\Common\Exception\SoapException;
  *
  * @author Tiago Franco
  */
-class SoapCurl extends SoapBase 
+class SoapCurl extends SoapBase
 {
     /**
      * @var array
      */
-    protected $prefixes = [1 => 'soapenv', 2 => 'x'];
-    
+    protected $prefixes = [1 => 'SOAP-ENV', 2 => 'SOAP-ENV'];
+
     /**
      * Send soap message to url
      * @param string $url
@@ -50,17 +51,17 @@ class SoapCurl extends SoapBase
             $soapheader
         );
         $msgSize = strlen($envelope);
-        
+
         $this->httpver = CURL_HTTP_VERSION_1_0;
-        
+
         $parameters[] = "Content-length: $msgSize";
-      
+
         if (!empty($action)) {
             $parameters[0] .= "action=$action";
         }
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
-        
+
         try {
             $oCurl = curl_init();
             $this->setCurlProxy($oCurl);
@@ -70,17 +71,17 @@ class SoapCurl extends SoapBase
             curl_setopt($oCurl, CURLOPT_TIMEOUT, $this->soaptimeout + 20);
             curl_setopt($oCurl, CURLOPT_HEADER, 1);
             curl_setopt($oCurl, CURLOPT_HTTP_VERSION, $this->httpver);
-            curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, false);
             if (!$this->disablesec) {
                 curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 2);
                 if (is_file($this->casefaz)) {
                     curl_setopt($oCurl, CURLOPT_CAINFO, $this->casefaz);
                 }
             }
-            curl_setopt($oCurl, CURLOPT_SSLVERSION, $this->soapprotocol);
-            curl_setopt($oCurl, CURLOPT_SSLCERT, $this->tempdir . $this->certfile);
-            curl_setopt($oCurl, CURLOPT_SSLKEY, $this->tempdir . $this->prifile);
+            // curl_setopt($oCurl, CURLOPT_SSLVERSION, $this->soapprotocol);
+            // curl_setopt($oCurl, CURLOPT_SSLCERT, $this->tempdir . $this->certfile);
+            // curl_setopt($oCurl, CURLOPT_SSLKEY, $this->tempdir . $this->prifile);
             if (!empty($this->temppass)) {
                 curl_setopt($oCurl, CURLOPT_KEYPASSWD, $this->temppass);
             }
@@ -117,7 +118,7 @@ class SoapCurl extends SoapBase
         }
         return $this->responseBody;
     }
-    
+
     /**
      * Set proxy into cURL parameters
      * @param \CurlHandle $oCurl
@@ -134,7 +135,7 @@ class SoapCurl extends SoapBase
             }
         }
     }
-    
+
     /**
      * Mount soap envelope
      * @param string $request
@@ -158,7 +159,7 @@ class SoapCurl extends SoapBase
             $request
         );
     }
-    
+
     /**
      * Get attributes
      * @param array $namespaces
@@ -172,7 +173,7 @@ class SoapCurl extends SoapBase
         }
         return $envelopeAttributes;
     }
-    
+
     /**
      * Create a envelop string
      * @param string $envelopPrefix
