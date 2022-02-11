@@ -17,6 +17,7 @@ namespace NFePHP\NFSe\Models\BHISS;
  * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
  */
 
+use NFePHP\Common\Soap\SoapCurl;
 use NFePHP\NFSe\Models\Abrasf\Tools as ToolsAbrasft;
 
 class Tools extends ToolsAbrasft
@@ -65,7 +66,7 @@ class Tools extends ToolsAbrasft
         }
 
         if (!is_object($this->soap)) {
-            $this->soap = new \NFePHP\NFSe\Common\SoapCurl($this->certificate);
+            $this->soap = new SoapCurl($this->certificate);
         }
         //formata o xml da mensagem para o padão esperado pelo webservice
         $dom = new \DOMDocument('1.0', 'UTF-8');
