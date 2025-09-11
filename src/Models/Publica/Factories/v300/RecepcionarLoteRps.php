@@ -36,8 +36,6 @@ class RecepcionarLoteRps extends RecepcionarLoteRpsBase
         //Cria o elemento pai
         $root = $dom->createElement('EnviarLoteRpsEnvio');
         $root->setAttribute('xmlns', 'http://www.publica.inf.br');
-        $root->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $root->setAttribute('xsi:schemaLocation', 'http://www.publica.inf.br schema_nfse_v03.xsd');
 
         //Adiciona as tags ao DOM
         $dom->appendChild($root);

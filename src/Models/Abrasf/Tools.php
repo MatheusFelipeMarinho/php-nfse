@@ -81,7 +81,7 @@ class Tools extends ToolsBase
         $fact->setXmlns($this->xmlns);
         $message = $fact->render($this->remetenteCNPJCPF, $this->remetenteIM, $protocolo);
         return $this->sendRequest($url, $message);
-        
+
     }
 
     /**
@@ -93,7 +93,7 @@ class Tools extends ToolsBase
     protected function sendRequest($url, $message)
     {
         $this->xmlRequest = $message;
-        
+
         //Abrasf possui apenas uma URL
         if (!$url) {
             $url = $this->url[$this->config->tpAmb];
@@ -165,6 +165,11 @@ class Tools extends ToolsBase
                     . "]]>"
                     . "</nfseDadosMsg>"
                     . "</e:{$this->method}>";
+                break;
+            case 203:
+                $request = "<nfse:{$this->method}>"
+                    . $message
+                    . "</nfse:{$this->method}>";
                 break;
             default:
                 throw new \LogicException('Versão não suportada');
@@ -396,7 +401,7 @@ class Tools extends ToolsBase
      */
     public function recepcionarLoteRpsSincrono($lote, $rpss)
     {
-        $class = "NFePHP\\NFSe\\Models\\Abrasf\\Factories\\v{$this->versao}\\RecepcionarLoteRps";
+        $class = "NFePHP\\NFSe\\Models\\Abrasf\\Factories\\v{$this->versao}\\RecepcionarLoteRpsSincrono";
         $fact = new $class($this->certificate);
 
         return $this->recepcionarLoteRpsSincronoCommon($fact, $lote, $rpss);
@@ -409,7 +414,7 @@ class Tools extends ToolsBase
      * @param string $url
      * @return string
      */
-    protected function recepcionarLoteRpsSincronoCommon(Factories\RecepcionarLoteRps $fact, $lote, $rpss, $url = '')
+    protected function recepcionarLoteRpsSincronoCommon(Factories\RecepcionarLoteRpsSincrono $fact, $lote, $rpss, $url = '')
     {
         $this->method = 'RecepcionarLoteRpsSincrono';
         $fact->setXmlns($this->xmlns);

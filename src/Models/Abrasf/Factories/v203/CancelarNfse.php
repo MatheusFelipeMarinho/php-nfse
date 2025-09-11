@@ -2,11 +2,11 @@
 
 namespace NFePHP\NFSe\Models\Abrasf\Factories\v203;
 
-use NFePHP\NFSe\Models\Abrasf\Factories\Factory;
 use NFePHP\Common\DOMImproved as Dom;
 use NFePHP\NFSe\Models\Abrasf\Factories\Signer;
+use NFePHP\NFSe\Models\Abrasf\Factories\CancelarNfse as CancelarNfseBase;
 
-class CancelarNfse extends Factory
+class CancelarNfse extends CancelarNfseBase
 {
     /**
      * Método usado para gerar o XML do Soap Request
@@ -42,6 +42,7 @@ class CancelarNfse extends Factory
         $dom->appChild($root, $loteRps, 'Adicionando tag Pedido');
         
         $InfPedidoCancelamento = $dom->createElement('InfPedidoCancelamento');
+        $InfPedidoCancelamento->setAttribute('Id', $nfseNumero);
 
         $dom->appChild(
             $loteRps,
@@ -100,7 +101,7 @@ class CancelarNfse extends Factory
         $dom->addChild(
             $identificacaoNfse,
             'CodigoMunicipio',
-            $this->codMun,
+            $this->cmun,
             false,
             "Código Municipio",
             false

@@ -116,7 +116,7 @@ class Rps extends RpsBase
      */
     public $infDataEmissao;
     /**
-     * @var array
+     * @var string
      */
     public $infCompetencia;
     /**
@@ -387,15 +387,11 @@ class Rps extends RpsBase
 
     /**
      * Set date of issue
-     * @param string $ano
-     * @param string $mes
+     * @param string $competencia
      */
-    public function competencia(string $ano, string $mes)
+    public function competencia(string $competencia)
     {
-        $this->infCompetencia = [
-            'ano' => $ano,
-            'mes' => $mes
-        ];
+        $this->infCompetencia = $competencia;
     }
 
     /**
@@ -910,7 +906,7 @@ class Rps extends RpsBase
         }
 
         $value = trim($value);
-        if (!Validator::stringType()->length(1, 2000)->validate($value)) {
+        if (!Validator::stringType()->length(0, 2000)->validate($value)) {
             throw new \InvalidArgumentException($msg);
         }
         $this->infInformacoesComplementares = $value;
@@ -967,27 +963,22 @@ class Rps extends RpsBase
         ];
     }
 
-    public function addItemDiscriminacao($descricao, $itemServico, $aliquota, $qtde, $valorUnitario, $deducoes = '', $descontoCondicionado = '', $descontoIncondicionado = '')
+    public function addItemDiscriminacao($descricao, $itemServico, $aliquota, $qtde, $valorUnitario, $deducoes = '0.00', $descontoCondicionado = '0.00', $descontoIncondicionado = '0.00')
     {
         $item = [
             'Descricao' => $descricao,
             'itemServico' => $itemServico,
             'aliquota' => $aliquota,
             'Quantidade' => $qtde,
-            'ValorUnitario' => $valorUnitario
+            'ValorUnitario' => $valorUnitario,
+            'Deducoes' => $deducoes,
+            'DescontoCondicionado' => $descontoCondicionado,
+            'DescontoIncondicionado' => $descontoIncondicionado
         ];
 
-        if (!empty($deducoes)) {
-            $item['Deducoes'] = $deducoes;
-        }
-        if (!empty($descontoCondicionado)) {
-            $item['DescontoCondicionado'] = $descontoCondicionado;
-        }
-        if (!empty($descontoIncondicionado)) {
-            $item['DescontoIncondicionado'] = $descontoIncondicionado;
-        }
         $this->infDiscriminacao[] = $item;
     }
+    
     /**
      * Set discrimination of service
      * @param string $value

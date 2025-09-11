@@ -42,6 +42,17 @@ class ConsultarLoteRps extends ConsultarLoteRpsBase
         );
         //Adiciona a tag CpfCnpj na tag Prestador
         $dom->appChild($prestador, $cpfCnpj, 'Adicionando tag CpfCnpj ao Prestador');
+
+        //Adiciona a tag Inscrição Municipal na tag Prestador
+        $dom->addChild(
+            $prestador,
+            'InscricaoMunicipal',
+            $im,
+            true,
+            "InscricaoMunicipal",
+            true
+        );
+
         //Adiciona a tag Prestador a consulta
         $dom->appChild($root, $prestador, 'Adicionando tag Prestador');
 

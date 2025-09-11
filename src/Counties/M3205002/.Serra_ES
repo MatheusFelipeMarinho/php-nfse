@@ -1,0 +1,10 @@
+Serra ES
+IBGE: 3205002
+SIAF: 5699
+Padrão: Smartpd
+SOAP Version: 1.2
+URL Entrada: http://apps.serra.es.gov.br:8080/tbw/services/WSEntrada
+URL Saida: http://apps.serra.es.gov.br:8080/tbw/services/WSSaida
+URL Util: http://apps.serra.es.gov.br:8080/tbw/services/WSUtil
+xmlns-lote: http://apps.serra.es.gov.br:8080/tbw/docs/xsd/WSEntradaNfd.xsd
+xmlns-cancela: http://apps.serra.es.gov.br:8080/tbw/docs/xsd/WSEntradaCancelar.xsd

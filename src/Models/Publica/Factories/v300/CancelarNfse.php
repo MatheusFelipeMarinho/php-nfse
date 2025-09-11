@@ -24,7 +24,8 @@ class CancelarNfse extends Factory
         $inscricaoMunicipal,
         $codMunicipio,
         $nfseNumero,
-        $codCancelamento
+        $codCancelamento,
+        $motivo = ""
     ) {
         $dom = new Dom('1.0', 'utf-8');
         $dom->formatOutput = false;
@@ -71,7 +72,7 @@ class CancelarNfse extends Factory
             "Cpf / Cnpj",
             true
         );
- 
+
         /* Inscrição Municipal */
         $dom->addChild(
             $identificacaoNfse,
@@ -104,6 +105,18 @@ class CancelarNfse extends Factory
             "Codigo Cancelamento",
             false
         );
+
+        if (!empty($motivo)) {
+            /* Código do Cancelamento */
+            $dom->addChild(
+                $InfPedidoCancelamento,
+                'MotivoCancelamento',
+                $motivo,
+                false,
+                "Motivo Cancelamento",
+                false
+            );
+        }
 
         //Parse para XML
         $body = str_replace('<?xml version="1.0" encoding="utf-8"?>', '', $dom->saveXML());

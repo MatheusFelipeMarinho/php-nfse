@@ -26,13 +26,13 @@ class Tools extends ToolsBase
     protected $schemeFolder = 'Publica';
     protected $params = [];
 
-    public function cancelarNfse($nfseNumero, $codCancelamento)
+    public function cancelarNfse($nfseNumero, $codCancelamento, $motivo = "")
     {
         $class = "NFePHP\\NFSe\\Models\\Publica\\Factories\\v{$this->versao}\\CancelarNfse";
         $fact = new $class($this->certificate);
 
         $this->method = 'CancelarNfse';
-        $message = $fact->render($this->versao, $this->remetenteCNPJCPF, $this->remetenteIM, $this->config->cmun, $nfseNumero, $codCancelamento);
+        $message = $fact->render($this->versao, $this->remetenteCNPJCPF, $this->remetenteIM, $this->config->cmun, $nfseNumero, $codCancelamento, $motivo);
         return $this->sendRequest('', $message);
     }
 
@@ -77,7 +77,7 @@ class Tools extends ToolsBase
     protected function sendRequest($url, $message)
     {
         $this->xmlRequest = $message;
-        
+
         //Publica possui apenas uma URL
         if (!$url) {
             $url = $this->url[$this->config->tpAmb];
@@ -115,7 +115,7 @@ class Tools extends ToolsBase
         return $this->sendRequest('', $message);
     }
 
-    public function ConsultarNfsePorRps($numero, $serie, $tipo)
+    public function consultarNfsePorRps($numero, $serie, $tipo)
     {
         $class = "NFePHP\\NFSe\\Models\\Publica\\Factories\\v{$this->versao}\\ConsultarNfsePorRps";
         $fact = new $class($this->certificate);

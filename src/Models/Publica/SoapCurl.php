@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace NFePHP\NFSe\Models\Publica;
 
@@ -18,15 +18,15 @@ use NFePHP\Common\Soap\SoapCurl as SoapCurlBase;
  * @link      http://github.com/nfephp-org/sped-common for the canonical source repository
  */
 
- /**
-  * @author Tiago Franco
-  * Servico para
-  */
- class SoapCurl extends SoapCurlBase
- {
-     /**
-     * @var array
-     */
+/**
+ * @author Tiago Franco
+ * Servico para
+ */
+class SoapCurl extends SoapCurlBase
+{
+    /**
+    * @var array
+    */
     protected $prefixes = [1 => 'S', 2 => 'S'];
 
     /**
@@ -72,7 +72,7 @@ use NFePHP\Common\Soap\SoapCurl as SoapCurlBase;
         }
         $this->requestHead = implode("\n", $parameters);
         $this->requestBody = $envelope;
-        
+
         try {
             $oCurl = curl_init();
             #$this->setCurlProxy($oCurl);
@@ -122,11 +122,34 @@ use NFePHP\Common\Soap\SoapCurl as SoapCurlBase;
             throw SoapException::unableToLoadCurl($e->getMessage());
         }
         if ($this->soaperror != '') {
-            throw SoapException::soapFault($this->soaperror . " [$url]");
+            if (intval($this->soaperror_code) == 0) {
+                $this->soaperror_code = 7;
+            }
+            throw SoapException::soapFault($this->soaperror . " [$url]", $this->soaperror_code);
         }
         if ($httpcode != 200) {
-            throw SoapException::soapFault(" [$url]" . $this->responseHead);
+            $msg = $this->getCodeMessage($httpcode);
+            if (intval($httpcode) == 0) {
+                $httpcode = 52;
+            } elseif ($httpcode == 500) {
+                $httpcode = 89;
+            }
+            throw SoapException::soapFault($msg, $httpcode);
         }
         return $this->responseBody;
     }
- }
+
+    /**
+     * Extrai mensagem da liste de erros HTTP
+     * @param integer $code
+     * @return string
+     */
+    private function getCodeMessage($code)
+    {
+        $codes = json_decode(file_get_contents(__DIR__.'/httpcodes.json'), true);
+        if (!empty($codes[$code])) {
+            return $codes[$code]['description'];
+        }
+        return "Erro desconhecido.";
+    }
+}

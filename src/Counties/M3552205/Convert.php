@@ -5,7 +5,7 @@ namespace NFePHP\NFSe\Counties\M3552205;
 /**
  * Classe a construção do xml da NFSe
  * para a Cidade de Sorocaba SP
- * conforme o modelo DSFNET
+ * conforme o modelo Abrasf 2.03
  *
  * @category  NFePHP
  * @package   NFePHP\NFSe\Counties\M3552205\Convert
@@ -17,8 +17,8 @@ namespace NFePHP\NFSe\Counties\M3552205;
  * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
  */
 
-use NFePHP\NFSe\Models\Dsfnet\Convert as ConvertDsfnet;
+use NFePHP\NFSe\Models\Abrasf\Convert as ConvertAbrasf;
 
-class Convert extends ConvertDsfnet
+class Convert extends ConvertAbrasf
 {
 }
